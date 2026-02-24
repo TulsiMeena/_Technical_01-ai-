@@ -1,62 +1,67 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>मेरा AI चैटबॉट</title>
-    <style>
-        /* डिज़ाइन को सुंदर बनाने के लिए CSS */
-        body { font-family: Arial, sans-serif; background-color: #f4f4f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .chat-container { width: 400px; background: white; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); overflow: hidden; }
-        .chat-header { background: #007bff; color: white; padding: 15px; text-align: center; font-weight: bold; }
-        .chat-box { height: 300px; overflow-y: auto; padding: 15px; border-bottom: 1px solid #ddd; display: flex; flex-direction: column; }
-        .message { margin-bottom: 10px; padding: 8px 12px; border-radius: 15px; max-width: 80%; }
-        .user-msg { background: #007bff; color: white; align-self: flex-end; }
-        .ai-msg { background: #e9e9eb; color: #333; align-self: flex-start; }
-        .input-area { display: flex; padding: 10px; }
-        input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 5px; outline: none; }
-        button { background: #007bff; color: white; border: none; padding: 10px 15px; margin-left: 5px; cursor: pointer; border-radius: 5px; }
-    </style>
+    <title>Welcome to Aman Meena | _technical_01</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
+<canvas id="matrix-canvas"></canvas>
 
-<div class="chat-container">
-    <div class="chat-header">कोडिंग पार्टनर AI</div>
-    <div class="chat-box" id="chatBox">
-        <div class="message ai-msg">नमस्ते! मैं आपकी कैसे मदद कर सकता हूँ?</div>
+<header>
+    <div class="logo">
+        <img src="https://raw.githubusercontent.com/Amitmeena55/Aman-Meena-/main/Aman.jpg" alt="Technical_01 Logo">
+        <h1>_technical_01</h1>
     </div>
-    <div class="input-area">
-        <input type="text" id="userInput" placeholder="यहाँ लिखें...">
-        <button onclick="sendMessage()">भेजें</button>
-    </div>
-</div>
+    <nav>
+        <ul>
+            <li><a href="index.html" class="active">Home</a></li>
+            <li><a href="about.html">About Me</a></li>
+            <li><a href="privacy.html">Privacy Policy</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+            <li><button id="hacker-mode-btn" class="nav-btn">Hacker Mode</button></li>
+            <li><button id="bluetooth-sim-btn" class="nav-btn" style="display: none;">BT Broadcast</button></li>
+        </ul>
+    </nav>
+</header>
 
-<script>
-    function sendMessage() {
-        const input = document.getElementById("userInput");
-        const chatBox = document.getElementById("chatBox");
+<main>
+    <section class="hero">
+        <h2>Welcome to Aman Meena</h2>
+        <p>Your destination for Amazon project links, tech updates, and more. Join our community on Instagram and WhatsApp.</p>
+        <div class="cta-buttons">
+            <a href="https://www.instagram.com/_technical_01?igsh=MTdydjJkbWl3Y3ppeg==" target="_blank" class="btn btn-instagram"><i class="fab fa-instagram"></i> Follow on Instagram</a>
+            <a href="https://whatsapp.com/channel/0029VaDFCbF9hXFDBUx8fe3E" target="_blank" class="btn btn-whatsapp"><i class="fab fa-whatsapp"></i> Join WhatsApp Channel</a>
+        </div>
+    </section>
 
-        if (input.value.trim() === "") return;
+    <section class="chat-container">
+        <div class="chat-header">
+            <img src="https://raw.githubusercontent.com/Amitmeena55/Aman-Meena-/main/Technical_01.jpg" alt="Aman Meena">
+            <div>
+                <h3 style="margin: 0; color: white;">Chat with Aman Meena AI</h3>
+                <span style="font-size: 0.8rem; color: #aaa;">Ask me anything about _technical_01</span>
+            </div>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message ai-message">
+                Hello! I am the AI assistant for _technical_01. I can tell you about Aman Meena, our projects, and where to find us. How can I help you today?
+            </div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="userInput" placeholder="Ask about Aman Meena...">
+            <button id="sendButton"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </section>
+</main>
 
-        // यूज़र का मैसेज दिखाएं
-        const userDiv = document.createElement("div");
-        userDiv.className = "message user-msg";
-        userDiv.textContent = input.value;
-        chatBox.appendChild(userDiv);
+<footer>
+    <p>&copy; 2024 _technical_01. All rights reserved. Website created by Amit Meena.</p>
+</footer>
 
-        // AI का जवाब (अभी के लिए यह एक डमी रिस्पॉन्स है)
-        setTimeout(() => {
-            const aiDiv = document.createElement("div");
-            aiDiv.className = "message ai-msg";
-            aiDiv.textContent = "आपका संदेश मिल गया! असली AI जोड़ने के लिए हमें API की ज़रूरत होगी।";
-            chatBox.appendChild(aiDiv);
-            chatBox.scrollTop = chatBox.scrollHeight; // नीचे स्क्रॉल करें
-        }, 1000);
-
-        input.value = ""; // इनपुट साफ़ करें
-    }
-</script>
+<script src="script.js"></script>
 
 </body>
 </html>
-
