@@ -6,6 +6,7 @@
     <title>Contact Us | Aman Meena | _technical_01</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 <canvas id="matrix-canvas"></canvas>
@@ -23,6 +24,7 @@
             <li><a href="contact.html" class="active">Contact Us</a></li>
             <li><button id="hacker-mode-btn" class="nav-btn">Hacker Mode</button></li>
             <li><button id="bluetooth-sim-btn" class="nav-btn" style="display: none;">BT Broadcast</button></li>
+            <li><button id="tools-btn" class="nav-btn" style="display: none;">Tools</button></li>
         </ul>
     </nav>
 </header>
@@ -56,6 +58,17 @@
             </div>
             <button type="submit" class="btn btn-primary">Send Message</button>
         </form>
+    </section>
+
+    <!-- Hacker Tools Section -->
+    <section class="pdf-tool-section" id="pdfToolSection" style="display: none; margin-top: 2rem; padding: 1rem; border: 1px solid #0F0; border-radius: 8px;">
+        <h3 style="color: #0F0; font-family: monospace;">> SECURE_DOC_GENERATOR.EXE</h3>
+        <p style="color: #ccc; font-family: monospace;">Upload images to compile a classified PDF document.</p>
+        <div style="margin: 1rem 0;">
+            <input type="file" id="pdfImageInput" accept="image/*" multiple style="color: #fff;">
+        </div>
+        <button id="generatePdfBtn" class="nav-btn" style="border-color: #0F0; color: #0F0;">COMPILE PDF</button>
+        <div id="pdfStatus" style="margin-top: 10px; font-family: monospace; color: #0F0;"></div>
     </section>
 </main>
 
