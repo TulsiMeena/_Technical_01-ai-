@@ -16,9 +16,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const hackerBtn = document.getElementById('hacker-mode-btn');
     const btBroadcastBtn = document.getElementById('bluetooth-sim-btn');
     const toolsBtn = document.getElementById('tools-btn');
-    const pdfToolSection = document.getElementById('pdfToolSection');
-    const generatePdfBtn = document.getElementById('generatePdfBtn');
-    const pdfStatus = document.getElementById('pdfStatus');
+
+    // Identity Station Elements
+    const idStationSection = document.getElementById('idStationSection');
+    const startCameraBtn = document.getElementById('startCameraBtn');
+    const captureBtn = document.getElementById('captureBtn');
+    const resetCameraBtn = document.getElementById('resetCameraBtn');
+    const cameraFeed = document.getElementById('cameraFeed');
+    const idCardCanvas = document.getElementById('idCardCanvas');
+    const cameraStatus = document.getElementById('cameraStatus');
+
     const canvas = document.getElementById('matrix-canvas');
 
     // --- CHATBOT LOGIC ---
@@ -292,10 +299,22 @@ ACCESS GRANTED.</pre>`;
             }
             if(btBroadcastBtn) btBroadcastBtn.style.display = 'none'; // Hide BT button
             if(toolsBtn) toolsBtn.style.display = 'none'; // Hide Tools button
-            if(pdfToolSection) pdfToolSection.style.display = 'none'; // Ensure tool section is hidden
+            if(idStationSection) idStationSection.style.display = 'none'; // Ensure tool section is hidden
 
             clearInterval(matrixInterval);
             if(ctx) ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+
+            // Stop Camera if open
+            if(stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+                cameraFeed.style.display = 'none';
+                idCardCanvas.style.display = 'none';
+                startCameraBtn.style.display = 'inline-block';
+                captureBtn.style.display = 'none';
+                resetCameraBtn.style.display = 'none';
+                cameraStatus.textContent = "";
+            }
         }
     }
 
@@ -304,62 +323,96 @@ ACCESS GRANTED.</pre>`;
     }
 
     // --- TOOLS SECTION TOGGLE ---
-    if (toolsBtn && pdfToolSection) {
+    if (toolsBtn && idStationSection) {
         toolsBtn.addEventListener('click', () => {
             if (!isHackerMode) return;
-            if (pdfToolSection.style.display === 'none') {
-                pdfToolSection.style.display = 'block';
+            if (idStationSection.style.display === 'none') {
+                idStationSection.style.display = 'block';
                 if(chatBox) chatBox.scrollTop = chatBox.scrollHeight;
             } else {
-                pdfToolSection.style.display = 'none';
+                idStationSection.style.display = 'none';
             }
         });
     }
 
-    // --- PDF GENERATOR LOGIC ---
-    if (generatePdfBtn && pdfStatus) {
-        generatePdfBtn.addEventListener('click', async () => {
-            const input = document.getElementById('pdfImageInput');
-            if (!input || input.files.length === 0) {
-                pdfStatus.textContent = "ERROR: NO INPUT DATA DETECTED.";
-                return;
-            }
+    // --- IDENTITY STATION (CAMERA) LOGIC ---
+    let stream = null;
 
-            pdfStatus.textContent = "INITIALIZING PDF COMPILER...";
-
+    if (startCameraBtn && cameraFeed && captureBtn && idCardCanvas) {
+        startCameraBtn.addEventListener('click', async () => {
             try {
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF();
-
-                for (let i = 0; i < input.files.length; i++) {
-                    const file = input.files[i];
-                    if (i > 0) doc.addPage();
-
-                    const imageData = await readFileAsDataURL(file);
-
-                    const imgProps = doc.getImageProperties(imageData);
-                    const pdfWidth = doc.internal.pageSize.getWidth();
-                    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-                    doc.addImage(imageData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-                    pdfStatus.textContent = `PROCESSING SECTOR ${i + 1}/${input.files.length}...`;
-                }
-
-                doc.save("secure_document.pdf");
-                pdfStatus.textContent = "SUCCESS: DOCUMENT COMPILED & EXPORTED.";
-            } catch (error) {
-                console.error(error);
-                pdfStatus.textContent = "CRITICAL ERROR: COMPILATION FAILED.";
+                cameraStatus.textContent = "REQUESTING OPTICAL SENSOR ACCESS...";
+                stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+                cameraFeed.srcObject = stream;
+                cameraFeed.style.display = 'block';
+                startCameraBtn.style.display = 'none';
+                captureBtn.style.display = 'inline-block';
+                cameraStatus.textContent = "SENSOR ACTIVE. SUBJECT ACQUIRED.";
+                idCardCanvas.style.display = 'none';
+            } catch (err) {
+                console.error("Camera Error:", err);
+                cameraStatus.textContent = "ERROR: SENSOR ACCESS DENIED OR UNAVAILABLE.";
             }
         });
-    }
 
-    function readFileAsDataURL(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = reject;
-            reader.readAsDataURL(file);
+        captureBtn.addEventListener('click', () => {
+            if (!stream) return;
+
+            cameraStatus.textContent = "PROCESSING BIOMETRIC DATA...";
+
+            // Setup Canvas
+            const context = idCardCanvas.getContext('2d');
+            idCardCanvas.width = 400;
+            idCardCanvas.height = 250;
+            idCardCanvas.style.display = 'block';
+            cameraFeed.style.display = 'none';
+
+            // Draw Black Background (Card Base)
+            context.fillStyle = '#000';
+            context.fillRect(0, 0, idCardCanvas.width, idCardCanvas.height);
+            context.strokeStyle = '#0F0';
+            context.lineWidth = 2;
+            context.strokeRect(5, 5, idCardCanvas.width - 10, idCardCanvas.height - 10);
+
+            // Draw Captured Image
+            // Calculate aspect ratio to fit image on the left
+            const vidWidth = cameraFeed.videoWidth;
+            const vidHeight = cameraFeed.videoHeight;
+            const drawWidth = 120;
+            const drawHeight = (vidHeight / vidWidth) * drawWidth;
+
+            context.drawImage(cameraFeed, 20, 50, drawWidth, drawHeight);
+            context.strokeStyle = '#0F0';
+            context.strokeRect(20, 50, drawWidth, drawHeight);
+
+            // Draw Text Details
+            context.fillStyle = '#0F0';
+            context.font = '16px monospace';
+            context.fillText("_TECHNICAL_01 ACCESS CARD", 140, 40);
+
+            context.font = '12px monospace';
+            context.fillStyle = '#fff';
+            context.fillText("ID: " + Math.floor(Math.random() * 90000 + 10000), 160, 70);
+            context.fillText("LEVEL: ELITE HACKER", 160, 90);
+            context.fillText("ACCESS: UNRESTRICTED", 160, 110);
+            context.fillText("STATUS: VERIFIED", 160, 130);
+
+            const date = new Date();
+            context.fillText("ISSUED: " + date.toLocaleDateString(), 160, 160);
+
+            // Stop Camera
+            stream.getTracks().forEach(track => track.stop());
+            stream = null;
+
+            captureBtn.style.display = 'none';
+            resetCameraBtn.style.display = 'inline-block';
+            cameraStatus.textContent = "IDENTITY CONFIRMED. ACCESS GRANTED.";
+        });
+
+        resetCameraBtn.addEventListener('click', () => {
+            idCardCanvas.style.display = 'none';
+            resetCameraBtn.style.display = 'none';
+            startCameraBtn.click(); // Restart camera
         });
     }
 

@@ -6,7 +6,6 @@
     <title>Welcome to Aman Meena | _technical_01</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 <canvas id="matrix-canvas"></canvas>
@@ -59,14 +58,21 @@
     </section>
 
     <!-- Hacker Tools Section -->
-    <section class="pdf-tool-section" id="pdfToolSection" style="display: none; margin-top: 2rem; padding: 1rem; border: 1px solid #0F0; border-radius: 8px;">
-        <h3 style="color: #0F0; font-family: monospace;">> SECURE_DOC_GENERATOR.EXE</h3>
-        <p style="color: #ccc; font-family: monospace;">Upload images to compile a classified PDF document.</p>
-        <div style="margin: 1rem 0;">
-            <input type="file" id="pdfImageInput" accept="image/*" multiple style="color: #fff;">
+    <section class="pdf-tool-section" id="idStationSection" style="display: none; margin-top: 2rem; padding: 1rem; border: 1px solid #0F0; border-radius: 8px;">
+        <h3 style="color: #0F0; font-family: monospace;">> IDENTITY_VERIFICATION_STATION.EXE</h3>
+        <p style="color: #ccc; font-family: monospace;">Enable camera access to generate your personalized Hacker Access Card.</p>
+
+        <div style="margin: 1rem 0; text-align: center;">
+            <video id="cameraFeed" autoplay playsinline style="width: 100%; max-width: 400px; border: 2px solid #0F0; display: none; margin-bottom: 10px;"></video>
+            <canvas id="idCardCanvas" style="display: none; width: 100%; max-width: 400px; border: 2px solid #0F0;"></canvas>
         </div>
-        <button id="generatePdfBtn" class="nav-btn" style="border-color: #0F0; color: #0F0;">COMPILE PDF</button>
-        <div id="pdfStatus" style="margin-top: 10px; font-family: monospace; color: #0F0;"></div>
+
+        <div style="display: flex; gap: 10px; justify-content: center;">
+            <button id="startCameraBtn" class="nav-btn" style="border-color: #0F0; color: #0F0;">INITIALIZE CAMERA</button>
+            <button id="captureBtn" class="nav-btn" style="border-color: #0F0; color: #0F0; display: none;">CAPTURE ID</button>
+            <button id="resetCameraBtn" class="nav-btn" style="border-color: #F00; color: #F00; display: none;">RESET</button>
+        </div>
+        <div id="cameraStatus" style="margin-top: 10px; font-family: monospace; color: #0F0; text-align: center;"></div>
     </section>
 </main>
 
